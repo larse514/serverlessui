@@ -1,5 +1,5 @@
 GOFILES = $(shell find . -name '*.go' -not -path './vendor/*')
-GOPACKAGES = $(shell go list ./...  | grep -v /serverless-ui/)
+
 default: build
 
 workdir:
@@ -8,7 +8,7 @@ workdir:
 build: workdir/serverless-ui
 
 workdir/serverless-ui: $(GOFILES)
-	go build -o workdir/serverless-ui .
+	go build -o workdir/serverless-ui ./serverless-ui
 
 dependencies: 
 	@go get github.com/tools/godep
