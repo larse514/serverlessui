@@ -1,6 +1,10 @@
 package bucket
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/larse514/serverlessui/serverless-ui/commands"
+)
 
 const (
 	domainName       = "somedomain.com"
@@ -8,7 +12,7 @@ const (
 )
 
 func TestGetStackName(t *testing.T) {
-	input := Input{FullDomainName: domainName}
+	input := commands.BucketInput{FullDomainName: domainName}
 	expected := "somedomain-com"
 	got := getStackName(&input)
 
@@ -19,7 +23,7 @@ func TestGetStackName(t *testing.T) {
 }
 
 func TestGetStackNamePrefix(t *testing.T) {
-	input := Input{FullDomainName: longerDomainName}
+	input := commands.BucketInput{FullDomainName: longerDomainName}
 
 	expected := "prefix-somedomain-com"
 	got := getStackName(&input)

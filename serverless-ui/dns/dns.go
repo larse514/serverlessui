@@ -1,67 +1,65 @@
 package dns
 
 import (
+	"log"
 	"strings"
 
-	"github.com/aws/aws-sdk-go/service/cloudformation"
-	"github.com/larse514/serverlessui/serverless-cli/cf"
+	"github.com/larse514/aws-cloudformation-go"
+	"github.com/larse514/serverlessui/serverless-ui/commands"
 )
 
 const (
-	route53Path = "ias/cloudformation/route53.yml"
+	route53Path = "https://s3.amazonaws.com/serverless-ui-deployables/route53.yml"
 	//route53 param values
-	domainNameParam       = "DomainName"
+	domainNameParam       = "HostedZone"
 	hostedZoneExistsParam = "HostedZoneExists"
 	environmentParam      = "Environment"
 )
 
-//DNS is an interface to represent Cloud DNS Services
-type DNS interface {
-	CreateHostedZone(input *Input) error
-}
-
 //Route53 is an implementation of the DNS interface
 type Route53 struct {
 	Executor cf.Executor
+	Resource cf.Resource
 }
 
-//Input is a struct representing the required parameters to pass for HostedZoneCreation creation
-type Input struct {
-	DomainName string
-	//todo- add type safety
-	HostedZoneExists string
-	Environment      string
-}
-
-//CreateHostedZone Method to create Route53 hosted zone
-func (route53 Route53) CreateHostedZone(input *Input) error {
+//DeployHostedZone Method to create Route53 hosted zone
+func (route53 Route53) DeployHostedZone(input *commands.DNSInput) error {
 	//replace domain name
+	log.Println(*input)
 	stackName := getStackName(input)
-	//todo-check for existance
-	//create stack
-	route53.Executor.CreateStack(route53Path, stackName, createDNSInputParameters(input))
+	log.Println(stackName)
 
-	return route53.Executor.PauseUntilCreateFinished(stackName)
+	//todo- i recommend refactoring this out of here
+	stack, err := route53.Resource.GetStack(&stackName)
+	if err != nil {
+		return err
+	}
+	if stack.StackName == nil {
+		//create stack
+		route53.Executor.CreateStackFromS3(route53Path, stackName, createDNSInputParameters(input), nil)
+		return route53.Executor.PauseUntilCreateFinished(stackName)
+	}
 
+	return nil
 }
 
 //Method to convert DomainName from input to stack name
 //route53 does not allow for full stop (.) characters
-func getStackName(input *Input) string {
-	return strings.Replace(input.DomainName, ".", "-", -1)
+func getStackName(input *commands.DNSInput) string {
+	return strings.Replace(input.HostedZone, ".", "-", -1)
 }
 
 //Helper method to create []*cloudformation.Parameter from input
-func createDNSInputParameters(input *Input) []*cloudformation.Parameter {
+func createDNSInputParameters(input *commands.DNSInput) *map[string]string {
 	//we need to convert this (albeit awkwardly for the time being) to Cloudformation Parameters
 	//we do as such first by converting everything to a key value map
 	//key being the CF Param name, value is the value to provide to the cloudformation template
 	parameterMap := make(map[string]string, 0)
 	//todo-refactor this bloody hardcoded mess
-	parameterMap[domainNameParam] = input.DomainName
+	parameterMap[domainNameParam] = input.HostedZone
 	parameterMap[environmentParam] = input.Environment
 	parameterMap[hostedZoneExistsParam] = input.HostedZoneExists
 
-	return cf.CreateCloudformationParameters(parameterMap)
+	return &parameterMap
 
 }

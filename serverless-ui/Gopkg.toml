@@ -25,9 +25,9 @@
 #   unused-packages = true
 
 
-[[constraint]]
-  name = "github.com/aws/aws-sdk-go"
-  version = "1.13.23"
+# [[constraint]]
+#   name = "github.com/aws/aws-sdk-go"
+#   version = "1.13.23"
 
 [prune]
   go-tests = true
@@ -36,3 +36,6 @@
 [[constraint]]
   name = "github.com/urfave/cli"
   version = "1.20.0"
+[[constraint]]
+  branch = "master"
+  name = "github.com/larse514/aws-cloudformation-go"

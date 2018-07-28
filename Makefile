@@ -24,11 +24,11 @@ bindata:
 test: test-all
 
 test-all:
-	@go test -v ./...
+	@go test -v -cover ./serverless-ui/...
 
 test-min:
 	@go test ./...
 
 release:
-	aws s3 cp workdir/amazonian s3://amazonian.package.release/latest/amazonian
-	aws s3 cp workdir/amazonian s3://amazonian.package.release/$(VERSION)/amazonian
+	# aws s3 cp workdir/amazonian s3://amazonian.package.release/latest/amazonian
+	# aws s3 cp workdir/amazonian s3://amazonian.package.release/$(VERSION)/amazonian

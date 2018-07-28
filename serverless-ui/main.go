@@ -1,17 +1,17 @@
 package main
 
 import (
+	"log"
 	"os"
 
-	"github.com/urfave/cli"
+	"github.com/larse514/serverlessui/serverless-ui/config"
 )
 
 func main() {
-	// Setup seelog for amazon-ecr-credential-helper
+	app := config.CreateApp()
 
-	app := cli.NewApp()
 	err := app.Run(os.Args)
 	if err != nil {
-		println("poop")
+		log.Fatal(err)
 	}
 }
