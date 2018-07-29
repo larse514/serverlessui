@@ -12,7 +12,6 @@ const (
 	hostedZoneExistsArg = "hostedzoneexists"
 	tagArg              = "tag"
 	environment         = "environment"
-	certArn             = "certificationarn"
 	appDir              = "applicationdirectory"
 )
 
@@ -52,10 +51,9 @@ func Deploy(action DeployAction) cli.Command {
 				Environment:      c.String(environment),
 			}
 			bucketinput := BucketInput{
-				HostedZone:        c.String(hostedZone),
-				FullDomainName:    c.String(domainName),
-				AcmCertificateArn: c.String(certArn),
-				CacheValueTTL:     c.String(cacheTTLArg),
+				HostedZone:     c.String(hostedZone),
+				FullDomainName: c.String(domainName),
+				CacheValueTTL:  c.String(cacheTTLArg),
 			}
 			return action.Deploy(&dnsInput, &bucketinput, c.String(appDir))
 		},

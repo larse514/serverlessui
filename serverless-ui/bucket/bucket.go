@@ -1,6 +1,7 @@
 package bucket
 
 import (
+	"log"
 	"strings"
 
 	"github.com/larse514/aws-cloudformation-go"
@@ -30,7 +31,8 @@ func (s3Bucket S3Bucket) DeploySite(input *commands.BucketInput) error {
 	if err != nil {
 		return err
 	}
-	if stack.StackName == nil {
+	if *stack.StackName == "" {
+		log.Println("Creating s3 bucket ", stack)
 		//create stack
 		err = s3Bucket.Executor.CreateStackFromS3(s3BucketPath, stackName, createInputParameters(input), nil)
 		if err != nil {
@@ -38,7 +40,7 @@ func (s3Bucket S3Bucket) DeploySite(input *commands.BucketInput) error {
 		}
 		return s3Bucket.Executor.PauseUntilCreateFinished(stackName)
 	}
-
+	log.Println("S3 bucket already exists")
 	return nil
 
 }

@@ -14,6 +14,7 @@ const (
 	domainNameParam       = "HostedZone"
 	hostedZoneExistsParam = "HostedZoneExists"
 	environmentParam      = "Environment"
+	websiteArnOutput      = "WebsiteCertArn"
 )
 
 //Route53 is an implementation of the DNS interface
@@ -22,25 +23,43 @@ type Route53 struct {
 	Resource cf.Resource
 }
 
+//Route53Output struct containing output from Route53
+type Route53Output struct {
+	WebsiteArn string
+}
+
 //DeployHostedZone Method to create Route53 hosted zone
-func (route53 Route53) DeployHostedZone(input *commands.DNSInput) error {
+func (route53 Route53) DeployHostedZone(input *commands.DNSInput) (*Route53Output, error) {
 	//replace domain name
-	log.Println(*input)
 	stackName := getStackName(input)
-	log.Println(stackName)
 
 	//todo- i recommend refactoring this out of here
 	stack, err := route53.Resource.GetStack(&stackName)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	if stack.StackName == nil {
+	websiteOutputValue := input.Environment + "-" + websiteArnOutput
+	if *stack.StackName == "" {
+		log.Println("Creating new dns stack")
 		//create stack
-		route53.Executor.CreateStackFromS3(route53Path, stackName, createDNSInputParameters(input), nil)
-		return route53.Executor.PauseUntilCreateFinished(stackName)
+		err = route53.Executor.CreateStackFromS3(route53Path, stackName, createDNSInputParameters(input), nil)
+		if err != nil {
+			return nil, err
+		}
+		err = route53.Executor.PauseUntilCreateFinished(stackName)
+		if err != nil {
+			return nil, err
+		}
+		stack, err = route53.Resource.GetStack(&stackName)
+		if err != nil {
+			return nil, err
+		}
+		return &Route53Output{WebsiteArn: cf.GetOutputValue(stack, websiteOutputValue)}, nil
+
 	}
 
-	return nil
+	log.Println("DNS Stack already exists")
+	return &Route53Output{WebsiteArn: cf.GetOutputValue(stack, websiteOutputValue)}, nil
 }
 
 //Method to convert DomainName from input to stack name

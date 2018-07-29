@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"path/filepath"
+	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/s3"
@@ -27,28 +27,26 @@ func (uploader S3Uploader) UploadApplication(bucketName string, bucketPrefix str
 	//upload each
 	for _, file := range fileList {
 		log.Println("about to upload file ", file, " to ", bucketName, " ", bucketPrefix)
-		uploadFileToS3(uploader.Client, bucketName, bucketPrefix, file)
+		uploadFileToS3(uploader.Client, bucketName, bucketPrefix, file, dirPath)
 	}
 	return nil
 }
 
-func uploadFileToS3(client s3iface.S3API, bucketName string, bucketPrefix string, filePath string) error {
-	file, err := os.Open(filePath)
+func uploadFileToS3(client s3iface.S3API, bucketName string, bucketPrefix string, fileName string, root string) error {
+	file, err := os.Open(fileName)
 	if err != nil {
 		fmt.Println("Failed to open file", file, err)
 		return errors.New("Error opening file")
 	}
 	//defer close until after method returns
 	defer file.Close()
-	var key string
-	fileDirectory, _ := filepath.Abs(filePath)
-	key = bucketPrefix + fileDirectory
-
+	key := strings.Replace(fileName, root, "", -1)
 	// Create S3 upload parameters
 	params := &s3.PutObjectInput{
-		Bucket: aws.String(bucketName), // Required
-		Key:    aws.String(key),        // Required
-		Body:   file,
+		Bucket:      aws.String(bucketName), // Required
+		Key:         aws.String(key),        // Required
+		ContentType: aws.String("text/html"),
+		Body:        file,
 	}
 	//perform the upload
 	_, err = client.PutObject(params)

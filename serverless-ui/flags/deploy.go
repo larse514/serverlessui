@@ -9,7 +9,6 @@ const (
 	hostedZoneExists = "hostedzoneexists, e"
 	tag              = "tag, t"
 	environment      = "environment, env"
-	certificatearn   = "certificationarn, cert"
 	appdir           = "applicationdirectory, dir"
 )
 
@@ -39,10 +38,6 @@ func Deploy() []cli.Flag {
 		cli.StringFlag{
 			Name:  environment,
 			Usage: "`environment` used to differentiate deployments ",
-		},
-		cli.StringFlag{
-			Name:  certificatearn,
-			Usage: "`certificationarn` AWS Certificate Manager ARN ",
 		},
 		cli.StringFlag{
 			Name:  appdir,

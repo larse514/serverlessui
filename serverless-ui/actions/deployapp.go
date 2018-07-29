@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/larse514/serverlessui/serverless-ui/commands"
+	"github.com/larse514/serverlessui/serverless-ui/dns"
 )
 
 //Bucket is an interface to define creation of Bucket based sites
@@ -14,7 +15,7 @@ type Bucket interface {
 
 //DNS is an interface to represent Cloud DNS Services
 type DNS interface {
-	DeployHostedZone(input *commands.DNSInput) error
+	DeployHostedZone(input *commands.DNSInput) (*dns.Route53Output, error)
 }
 
 //Uploader is an interface defined to upload an application
@@ -31,16 +32,18 @@ type ServerlessUI struct {
 
 //Deploy method to deploy serverless UI
 func (serverless ServerlessUI) Deploy(dnsInput *commands.DNSInput, bucketInput *commands.BucketInput, appDir string) error {
-	err := serverless.DNS.DeployHostedZone(dnsInput)
+	output, err := serverless.DNS.DeployHostedZone(dnsInput)
 	if err != nil {
 		log.Println("error creating hosted zone ", err)
 		os.Exit(1)
 	}
+	//grab the arn output so we don't have to have the user provide it
+	bucketInput.AcmCertificateArn = output.WebsiteArn
 	err = serverless.Bucket.DeploySite(bucketInput)
 	if err != nil {
 		log.Println("error creating hosted zone ", err)
 		os.Exit(1)
 	}
 
-	return serverless.Uploader.UploadApplication(bucketInput.FullDomainName, "", appDir)
+	return serverless.Uploader.UploadApplication(bucketInput.FullDomainName, "/", appDir)
 }

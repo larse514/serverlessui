@@ -40,8 +40,12 @@ func (fileUtil FileUtility) GetFilesInDirectory(dirPath string) []string {
 	fileList := []string{}
 	filepath.Walk(dirPath, func(path string, f os.FileInfo, err error) error {
 		fmt.Println("PATH ==> " + path)
+		log.Println("NAME ==> ", f.Name())
+
 		isDirectory, err := isDirectory(path)
+		log.Println("path is a directory is ", isDirectory)
 		if err != nil {
+			log.Println("error walking directory ", err)
 			return err
 		}
 		if isDirectory {
