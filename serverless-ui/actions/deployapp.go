@@ -45,5 +45,10 @@ func (serverless ServerlessUI) Deploy(dnsInput *commands.DNSInput, bucketInput *
 		os.Exit(1)
 	}
 
-	return serverless.Uploader.UploadApplication(bucketInput.FullDomainName, "/", appDir)
+	err = serverless.Uploader.UploadApplication(bucketInput.FullDomainName, "/", appDir)
+	if err != nil {
+		log.Println("error creating hosted zone ", err)
+		os.Exit(1)
+	}
+	return nil
 }
