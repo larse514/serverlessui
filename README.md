@@ -9,3 +9,13 @@ CLI application to deploy serverless ui to Cloud providers like AWS
 3. CacheValueTTL CDN cache time to live
 4. HostedZoneExists Parameter to determine if HostedZone needs to be created (Optional)
 5. Tag of hosted zone, used to tag resources for tracking and billing (Optional)
+
+
+Release:
+```bash
+export GITHUB_TOKEN=<SOMETOKEN>
+$ github-release release --user <user> --repo serverlessui --tag <tag> --name "initial release" --description "initial release of cli" --pre-release
+
+$ github-release upload --user <user> --repo serverlessui --tag <tag> --name "serverless-ui MacOs" --file serverless-ui
+
+```
