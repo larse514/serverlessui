@@ -1,6 +1,6 @@
 GOFILES = $(shell find . -name '*.go' -not -path './vendor/*')
 
-default: dependencies test build
+default: clean dependencies test build
 
 workdir:
 	mkdir -p workdir
@@ -23,6 +23,8 @@ test-all:
 test-min:
 	@go test ./...
 
+clean:
+	rm -rf serverless-ui/vendor
 release:
 	# aws s3 cp workdir/amazonian s3://amazonian.package.release/latest/amazonian
 	# aws s3 cp workdir/amazonian s3://amazonian.package.release/$(VERSION)/amazonian
