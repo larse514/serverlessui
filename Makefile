@@ -1,6 +1,6 @@
 GOFILES = $(shell find . -name '*.go' -not -path './vendor/*')
 
-default: build
+default: dependencies test build
 
 workdir:
 	mkdir -p workdir
@@ -12,6 +12,7 @@ workdir/serverless-ui: $(GOFILES)
 
 dependencies: 
 	@go get github.com/tools/godep
+	@cd serverless-ui && dep ensure
 bindata:
 	./go-bindata -o assets/bindata.go ias/...
 test: test-all
