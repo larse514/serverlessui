@@ -1,4 +1,6 @@
-# serverlessui [![CircleCI](https://circleci.com/gh/larse514/serverlessui.svg?style=svg)](https://circleci.com/gh/larse514/serverlessui) [![Go Report Card](https://goreportcard.com/badge/github.com/larse514/serverlessui)](https://goreportcard.com/report/github.com/larse514/serverlessui) CLI application to deploy serverless ui to Cloud providers like AWS
+# serverlessui [![CircleCI](https://circleci.com/gh/larse514/serverlessui.svg?style=svg)](https://circleci.com/gh/larse514/serverlessui) [![Go Report Card](https://goreportcard.com/badge/github.com/larse514/serverlessui)](https://goreportcard.com/report/github.com/larse514/serverlessui) 
+
+CLI application to deploy serverless ui to Cloud providers like AWS
 
 
 ## Parameters
