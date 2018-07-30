@@ -13,7 +13,7 @@ default: clean dependencies bin-data test build
 build: serverless-ui
 
 bin-data:
-	./go-bindata -prefix $(IAAS_PATH) -pkg $(IAAS_LOCATION) -o $(IAAS_LOCATION)/$(IAAS_FILE) $(IAAS_PATH)
+	cd $(SRC_LOCATION) && ./go-bindata -prefix $(IAAS_PATH) -pkg $(IAAS_LOCATION) -o $(IAAS_LOCATION)/$(IAAS_FILE) $(IAAS_PATH)
 
 serverless-ui: $(GOFILES)	
 	./build.sh $(APP_NAME) $(SRC_LOCATION) $(BIN_OUTPUT)
@@ -36,7 +36,7 @@ test-min:
 clean:
 	rm -rf $(SRC_LOCATION)/vendor
 	rm -rf $(BIN_OUTPUT)/$(APP_NAME)*
-	rm -rf $(IAAS_LOCATION)/$(IAAS_FILE)
+	rm -rf $(SRC_LOCATION)/$(IAAS_LOCATION)/$(IAAS_FILE)
 
 publish-release:
 	@go get github.com/aktau/github-release

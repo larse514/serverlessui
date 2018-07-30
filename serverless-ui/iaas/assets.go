@@ -13,6 +13,12 @@ const (
 type AWSTemplate struct {
 }
 
+//Infrastructure is the interface to retrieve Iaas Assets
+type Infrastructure interface {
+	GetRoute53() (*string, error)
+	GetS3Site() (*string, error)
+}
+
 //GetRoute53 method to retrieve Route53 Template
 func (template AWSTemplate) GetRoute53() (*string, error) {
 	return getAsset(route53)

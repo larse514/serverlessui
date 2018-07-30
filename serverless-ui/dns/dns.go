@@ -6,10 +6,10 @@ import (
 
 	"github.com/larse514/aws-cloudformation-go"
 	"github.com/larse514/serverlessui/serverless-ui/commands"
+	"github.com/larse514/serverlessui/serverless-ui/iaas"
 )
 
 const (
-	route53Path = "https://s3.amazonaws.com/serverless-ui-deployables/route53.yml"
 	//route53 param values
 	domainNameParam       = "HostedZone"
 	hostedZoneExistsParam = "HostedZoneExists"
@@ -21,6 +21,7 @@ const (
 type Route53 struct {
 	Executor cf.Executor
 	Resource cf.Resource
+	IaaS     iaas.Infrastructure
 }
 
 //Route53Output struct containing output from Route53
@@ -40,9 +41,16 @@ func (route53 Route53) DeployHostedZone(input *commands.DNSInput) (*Route53Outpu
 	}
 	websiteOutputValue := input.Environment + "-" + websiteArnOutput
 	if *stack.StackName == "" {
+
 		log.Println("Creating new dns stack")
+
+		template, err := route53.IaaS.GetRoute53()
+
+		if err != nil {
+			return nil, err
+		}
 		//create stack
-		err = route53.Executor.CreateStackFromS3(route53Path, stackName, createDNSInputParameters(input), nil)
+		err = route53.Executor.CreateStack(*template, stackName, createDNSInputParameters(input), nil)
 		if err != nil {
 			return nil, err
 		}

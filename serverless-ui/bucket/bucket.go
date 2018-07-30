@@ -6,10 +6,10 @@ import (
 
 	"github.com/larse514/aws-cloudformation-go"
 	"github.com/larse514/serverlessui/serverless-ui/commands"
+	"github.com/larse514/serverlessui/serverless-ui/iaas"
 )
 
 const (
-	s3BucketPath = "https://s3.amazonaws.com/serverless-ui-deployables/s3site.yml"
 	//route53 param values
 	domainNameParam     = "HostedZone"
 	fullDomainNameParam = "FullDomainName"
@@ -21,6 +21,7 @@ const (
 type S3Bucket struct {
 	Executor cf.Executor
 	Resource cf.Resource
+	IaaS     iaas.Infrastructure
 }
 
 //DeploySite is a function to Create an S3 Site with CDN and ACM
@@ -33,8 +34,15 @@ func (s3Bucket S3Bucket) DeploySite(input *commands.BucketInput) error {
 	}
 	if *stack.StackName == "" {
 		log.Println("Creating s3 bucket ", stack)
+
+		template, err := s3Bucket.IaaS.GetS3Site()
+
+		if err != nil {
+			return err
+		}
 		//create stack
-		err = s3Bucket.Executor.CreateStackFromS3(s3BucketPath, stackName, createInputParameters(input), nil)
+		err = s3Bucket.Executor.CreateStack(*template, stackName, createInputParameters(input), nil)
+
 		if err != nil {
 			return err
 		}
