@@ -1,20 +1,22 @@
 GOFILES = $(shell find . -name '*.go' -not -path './vendor/*')
-
+APP_NAME=serverlessui
+SRC_LOCATION=serverless-ui
+BIN_OUTPUT=release
+MAJOR_VERSION=0
 default: clean dependencies test build
 
-workdir:
-	mkdir -p workdir
+build: release/serverless-ui
 
-build: workdir/serverless-ui
-
-workdir/serverless-ui: $(GOFILES)
-	go build -o workdir/serverless-ui ./serverless-ui
+release/serverless-ui: $(GOFILES)
+	./build.sh $(APP_NAME) $(SRC_LOCATION) $(BIN_OUTPUT)
+	# go build -o release/serverless-ui ./serverless-ui
 
 dependencies: 
 	@go get github.com/tools/godep
 	@cd serverless-ui && dep ensure
 bindata:
 	./go-bindata -o assets/bindata.go ias/...
+
 test: test-all
 
 test-all:
@@ -25,6 +27,7 @@ test-min:
 
 clean:
 	rm -rf serverless-ui/vendor
+
 release:
-	# aws s3 cp workdir/amazonian s3://amazonian.package.release/latest/amazonian
-	# aws s3 cp workdir/amazonian s3://amazonian.package.release/$(VERSION)/amazonian
+	@go get github.com/aktau/github-release
+	cd release && ./release.sh "v$(MAJOR_VERSION).$(VERSION)" $(APP_NAME)

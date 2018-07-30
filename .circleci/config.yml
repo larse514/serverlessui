@@ -18,6 +18,10 @@ jobs:
         keys:
           - v1-pkg-cache
     - run: make
+    - run:
+        name: Release Binary
+        command: |
+          make VERSION="${CIRCLE_BUILD_NUM}" release 
     - save_cache:
         key: v1-pkg-cache
         paths:
@@ -29,3 +33,5 @@ jobs:
 
     - store_test_results:
         path: /tmp/test-results
+
+        #${CIRCLE_BUILD_NUM}
