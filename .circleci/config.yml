@@ -21,9 +21,10 @@ jobs:
     - run:
         name: Release Binary
         command: |
-          if  [[ $GIT_COMMIT_DESC == RELEASE* ]] ;
-          then
+          if  [[ $GIT_COMMIT_DESC == RELEASE* ]] ; then
             make VERSION="${CIRCLE_BUILD_NUM}" publish-release
+          else 
+            echo no release on this commit
           fi
         environment:
           GIT_COMMIT_DESC: git log --format=oneline -n 1 $CIRCLE_SHA1 
