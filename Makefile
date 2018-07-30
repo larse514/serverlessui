@@ -3,6 +3,7 @@ APP_NAME=serverlessui
 SRC_LOCATION=serverless-ui
 BIN_OUTPUT=release
 MAJOR_VERSION=0
+MINOR_VERSION=0
 default: clean dependencies test build
 
 build: serverless-ui
@@ -31,4 +32,4 @@ clean:
 
 publish-release:
 	@go get github.com/aktau/github-release
-	cd release && ./release.sh "v$(MAJOR_VERSION).$(VERSION)" $(APP_NAME)
+	cd release && ./release.sh "v$(MAJOR_VERSION).$(MINOR_VERSION).$(VERSION)" $(APP_NAME)
