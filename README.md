@@ -2,20 +2,19 @@
 
 CLI application to deploy serverless ui to Cloud providers like AWS
 
+## Requirements
+The following is required to use serverless-ui cli
+
+1. AWS Registered domain name or hosted zone.  This will be used to create AWS Certificates via the Amazon Certificate Manager
+2. UI source code
 
 ## Parameters
-1. HostedZone DNS name of an existing Amazon Route 53 hosted zone e.g. vssdevelopment.com (Required)
-2. DomainName The full domain name e.g. www.vssdevelopment.com (Required)
-3. CacheValueTTL CDN cache time to live
-4. HostedZoneExists Parameter to determine if HostedZone needs to be created (Optional)
-5. Tag of hosted zone, used to tag resources for tracking and billing (Optional)
-
-
-Release:
-```bash
-export GITHUB_TOKEN=<SOMETOKEN>
-$ github-release release --user <user> --repo serverlessui --tag <tag> --name "initial release" --description "initial release of cli" --pre-release
-
-$ github-release upload --user <user> --repo serverlessui --tag <tag> --name "serverless-ui MacOs" --file serverless-ui
-
-```
+| Parameter                   | Description                                                                                          | Required | Default |
+|-----------------------------|------------------------------------------------------------------------------------------------------|----------|---------|
+| -hostedzone, -ho            | HostedZone DNS name of an existing Amazon Route 53 hosted zone e.g. example.com or one to be created | Yes      |         |
+| -domainname, -d             | DomainName The full domain name e.g. www.example.com                                                 | Yes      |         |
+| -cachettl, -c               | CacheValueTTL CDN cache time to live                                                                 | No       | 60      |
+| -hostedzoneexists, -e       | HostedZoneExists Parameter to determine if HostedZone needs to be created                            | No       | false   |
+| -tag, -t                    | Tag of hosted zone, used to tag resources for tracking and billing                                   | No       |         |
+| -applicationdirectory, -dir | Directory of UI source code to upload                                                                | Yes      |         |
+| -environment, -env          | Environment of deployed UI application.  Used to differentiate deployed environments                 | No       | prod    |

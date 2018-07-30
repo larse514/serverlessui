@@ -21,7 +21,12 @@ jobs:
     - run:
         name: Release Binary
         command: |
-          make VERSION="${CIRCLE_BUILD_NUM}" publish-release 
+          if  [[ $GIT_COMMIT_DESC == RELEASE* ]] ;
+          then
+            make VERSION="${CIRCLE_BUILD_NUM}" publish-release
+          fi
+        environment:
+          GIT_COMMIT_DESC: git log --format=oneline -n 1 $CIRCLE_SHA1 
     - save_cache:
         key: v1-pkg-cache
         paths:
