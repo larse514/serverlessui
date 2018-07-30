@@ -2,13 +2,20 @@ GOFILES = $(shell find . -name '*.go' -not -path './vendor/*')
 APP_NAME=serverlessui
 SRC_LOCATION=serverless-ui
 BIN_OUTPUT=release
+IAAS_PATH=iaas/cloudformation/
+IAAS_FILE=iaas.go
+IAAS_LOCATION=iaas
 MAJOR_VERSION=0
 MINOR_VERSION=0
-default: clean dependencies test build
+
+default: clean dependencies bin-data test build
 
 build: serverless-ui
 
-serverless-ui: $(GOFILES)
+bin-data:
+	./go-bindata -prefix $(IAAS_PATH) -pkg $(IAAS_LOCATION) -o $(IAAS_LOCATION)/$(IAAS_FILE) $(IAAS_PATH)
+
+serverless-ui: $(GOFILES)	
 	./build.sh $(APP_NAME) $(SRC_LOCATION) $(BIN_OUTPUT)
 
 dependencies: 
@@ -29,6 +36,7 @@ test-min:
 clean:
 	rm -rf $(SRC_LOCATION)/vendor
 	rm -rf $(BIN_OUTPUT)/$(APP_NAME)*
+	rm -rf $(IAAS_LOCATION)/$(IAAS_FILE)
 
 publish-release:
 	@go get github.com/aktau/github-release
