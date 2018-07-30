@@ -5,29 +5,30 @@ BIN_OUTPUT=release
 MAJOR_VERSION=0
 default: clean dependencies test build
 
-build: release/serverless-ui
+build: serverless-ui
 
-release/serverless-ui: $(GOFILES)
+serverless-ui: $(GOFILES)
 	./build.sh $(APP_NAME) $(SRC_LOCATION) $(BIN_OUTPUT)
-	# go build -o release/serverless-ui ./serverless-ui
 
 dependencies: 
 	@go get github.com/tools/godep
 	@cd serverless-ui && dep ensure
+
 bindata:
 	./go-bindata -o assets/bindata.go ias/...
 
 test: test-all
 
 test-all:
-	@go test -v -cover ./serverless-ui/...
+	@go test -v -cover ./$(SRC_LOCATION)/...
 
 test-min:
 	@go test ./...
 
 clean:
-	rm -rf serverless-ui/vendor
+	rm -rf $(SRC_LOCATION)/vendor
+	rm -rf $(BIN_OUTPUT)/$(APP_NAME)*
 
-release:
+publish-release:
 	@go get github.com/aktau/github-release
 	cd release && ./release.sh "v$(MAJOR_VERSION).$(VERSION)" $(APP_NAME)

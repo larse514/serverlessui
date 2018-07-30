@@ -17,11 +17,11 @@ jobs:
     - restore_cache:
         keys:
           - v1-pkg-cache
-    - run: make
+    - run: make -B
     - run:
         name: Release Binary
         command: |
-          make VERSION="${CIRCLE_BUILD_NUM}" release 
+          make VERSION="${CIRCLE_BUILD_NUM}" publish-release 
     - save_cache:
         key: v1-pkg-cache
         paths:
