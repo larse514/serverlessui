@@ -21,14 +21,13 @@ jobs:
     - run:
         name: Release Binary
         command: |
+          echo "export GIT_COMMIT_DESC=\"$(git log --format=oneline -n 1 $CIRCLE_SHA1)\"" >> ~/.bashrc
           echo $GIT_COMMIT_DESC
           if  [[ $GIT_COMMIT_DESC == RELEASE* ]] ; then
             make VERSION="${CIRCLE_BUILD_NUM}" publish-release
           else 
             echo no release on this commit
           fi
-        environment:
-          GIT_COMMIT_DESC: git log --format=oneline -n 1 $CIRCLE_SHA1 
     - save_cache:
         key: v1-pkg-cache
         paths:
