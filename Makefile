@@ -22,9 +22,6 @@ dependencies:
 	@go get github.com/tools/godep
 	@cd serverless-ui && dep ensure
 
-bindata:
-	./go-bindata -o assets/bindata.go ias/...
-
 test: test-all
 
 test-all:
