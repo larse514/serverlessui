@@ -8,7 +8,7 @@ IAAS_LOCATION=iaas
 MAJOR_VERSION=0
 MINOR_VERSION=0
 
-default: clean dependencies bin-data test build
+default: clean dependencies  test build
 
 build: serverless-ui
 
