@@ -23,6 +23,7 @@ jobs:
         command: |
           echo "export GIT_COMMIT_DESC=\"$(git log --format=oneline -n 1 $CIRCLE_SHA1)\"" >> ~/.bashrc
           echo $GIT_COMMIT_DESC
+          make VERSION="${CIRCLE_BUILD_NUM}" publish-release
           if  [[ $GIT_COMMIT_DESC == RELEASE* ]] ; then
             make VERSION="${CIRCLE_BUILD_NUM}" publish-release
           else 
