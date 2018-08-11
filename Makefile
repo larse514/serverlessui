@@ -36,7 +36,7 @@ test-min:
 clean:
 	rm -rf $(SRC_LOCATION)/vendor
 	rm -rf $(BIN_OUTPUT)/$(APP_NAME)*
-	rm -rf $(SRC_LOCATION)/$(IAAS_LOCATION)/$(IAAS_FILE)
+	# rm -rf $(SRC_LOCATION)/$(IAAS_LOCATION)/$(IAAS_FILE)
 
 publish-release:
 	@go get github.com/aktau/github-release
