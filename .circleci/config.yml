@@ -21,6 +21,7 @@ jobs:
     - run:
         name: Release Binary
         command: |
+          echo $GIT_COMMIT_DESC
           if  [[ $GIT_COMMIT_DESC == RELEASE* ]] ; then
             make VERSION="${CIRCLE_BUILD_NUM}" publish-release
           else 
