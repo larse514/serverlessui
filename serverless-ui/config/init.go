@@ -14,6 +14,7 @@ import (
 	"github.com/larse514/serverlessui/serverless-ui/commands"
 	"github.com/larse514/serverlessui/serverless-ui/dns"
 	"github.com/larse514/serverlessui/serverless-ui/fileutil"
+	"github.com/larse514/serverlessui/serverless-ui/iaas"
 	"github.com/urfave/cli"
 )
 
@@ -35,7 +36,7 @@ func CreateApp() *cli.App {
 	resource := cf.Stack{Client: cloudformation}
 	executor := cf.IaaSExecutor{Client: cloudformation}
 	dns := dns.Route53{Executor: &executor, Resource: resource}
-	s3Bucket := bucket.S3Bucket{Executor: executor, Resource: resource}
+	s3Bucket := bucket.S3Bucket{Executor: executor, Resource: resource, IaaS: iaas.AWSTemplate{}}
 	uploader := bucket.S3Uploader{Client: s3, FileUtil: fileutil.FileUtility{}}
 	deployAction := actions.ServerlessUI{DNS: dns, Bucket: s3Bucket, Uploader: uploader}
 	app := cli.NewApp()

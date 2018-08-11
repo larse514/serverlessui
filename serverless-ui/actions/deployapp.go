@@ -1,6 +1,7 @@
 package actions
 
 import (
+	"errors"
 	"log"
 	"os"
 
@@ -37,8 +38,13 @@ func (serverless ServerlessUI) Deploy(dnsInput *commands.DNSInput, bucketInput *
 		log.Println("error creating hosted zone ", err)
 		os.Exit(1)
 	}
+	log.Println(output)
 	//grab the arn output so we don't have to have the user provide it
+	if output.WebsiteArn == "" {
+		return errors.New("Failed to retrieve Certificate")
+	}
 	bucketInput.AcmCertificateArn = output.WebsiteArn
+
 	err = serverless.Bucket.DeploySite(bucketInput)
 	if err != nil {
 		log.Println("error creating hosted zone ", err)

@@ -15,10 +15,6 @@ Parameters:
     Description: Parameter to determine if HostedZone needs to be created
   Environment:
     Type: String
-    AllowedValues:
-      - prod
-      - nonprod
-    Default: nonprod
     Description: Environment of hosted zone
 
 Conditions:

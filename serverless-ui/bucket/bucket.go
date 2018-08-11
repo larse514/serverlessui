@@ -32,8 +32,9 @@ func (s3Bucket S3Bucket) DeploySite(input *commands.BucketInput) error {
 	if err != nil {
 		return err
 	}
+
 	if *stack.StackName == "" {
-		log.Println("Creating s3 bucket ", stack)
+		log.Println("Creating s3 bucket ", stackName)
 
 		template, err := s3Bucket.IaaS.GetS3Site()
 
