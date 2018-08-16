@@ -18,3 +18,15 @@ The following is required to use serverless-ui cli
 | -tag, -t                    | Tag of hosted zone, used to tag resources for tracking and billing                                   | No       |         |
 | -applicationdirectory, -dir | Directory of UI source code to upload                                                                | Yes      |         |
 | -environment, -env          | Environment of deployed UI application.  Used to differentiate deployed environments                 | No       | prod    |
+
+
+##Development tips
+For Mac OS X is dep is not installing during make take a look at the following [article](https://stackoverflow.com/questions/36083542/error-command-not-found-with-golang)
+
+</br> There is an issue with make producing the expected binaries when building (or a fundamental misunderstanding on my part). Long story short the $make command will produce something like so:
+
+```bash
+cat build.sh >build
+chmod a+x build
+```
+Currently my workaround is to add the -B flag.  Read more (here)[https://www.gnu.org/software/make/manual/html_node/Options-Summary.html]
